@@ -28,11 +28,37 @@ async function run (){
             const products = await cursor.toArray();
             res.send(products)
         })
+        app.post('/products/add' , async(req , res)=>{
+            const product = req.body;
+          const result = await productCollection.insertOne(product);
+           res.json(result);
+           console.log(result)
+        })
          
-        
-
         app.get('/orders' , async(req ,res)=>{
-            const email = req.query.email;
+            const cursor = ordersCollection.find({});
+            const orders = await cursor.toArray();
+            res.json(orders)
+
+        })
+
+        app.put('/orders/:id' , async(req,res)=>{
+
+            const id = req.params.id
+            const updatedStatus = req.body;
+            const filter ={_id: ObjectId(id)};
+            const options ={upsert:true};
+            const updateDoc ={
+                $set: {
+                    report:updatedStatus.report
+                },
+            };
+            const result = await ordersCollection.updateOne(filter,updateDoc ,options)
+            res.json(result)
+        })
+
+        app.get('/orders/:email' , async(req ,res)=>{
+            const email = req.params.email;
             const query = {email: email}
             const cursor = ordersCollection.find(query);
             const orders = await cursor.toArray();
@@ -40,12 +66,7 @@ async function run (){
 
         })
 
-        app.get('/orders' , async(req ,res)=>{
-            const cursor = ordersCollection.find({});
-            const orders = await cursor.toArray();
-            res.json(orders)
-
-        })
+        
         
         app.post('/orders' , async(req ,res)=>{
             const order = req.body;
