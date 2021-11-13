@@ -122,6 +122,11 @@ async function run (){
        console.log(result)
     })
 
+    app.get('/reviews' , async(req , res)=>{
+        const cursor = reviewsCollection.find({});
+            const reviews = await cursor.toArray();
+            res.json(reviews)
+    })
 
     }
     finally{
