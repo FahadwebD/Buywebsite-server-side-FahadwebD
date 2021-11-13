@@ -29,6 +29,16 @@ async function run (){
             const products = await cursor.toArray();
             res.send(products)
         })
+
+        app.delete('/products/:id' , async(req , res)=>{
+            const id = req.params.id;
+            
+            const query = { _id: ObjectId(id) };
+            const result= await productCollection.deleteOne(query);
+            console.log('deleted product ' , result)
+            res.json(result);
+        })
+    
         app.post('/products/add' , async(req , res)=>{
             const product = req.body;
           const result = await productCollection.insertOne(product);
