@@ -22,6 +22,7 @@ async function run (){
         const productCollection = database.collection('products');
         const ordersCollection = database.collection('orders');
         const usersCollection = database.collection('users');
+        const reviewsCollection = database.collection('reviews');
 
         app.get('/products' , async(req , res)=>{
             const cursor = productCollection.find({});
@@ -32,7 +33,7 @@ async function run (){
             const product = req.body;
           const result = await productCollection.insertOne(product);
            res.json(result);
-           console.log(result)
+           
         })
          
         app.get('/orders' , async(req ,res)=>{
@@ -71,7 +72,7 @@ async function run (){
         app.post('/orders' , async(req ,res)=>{
             const order = req.body;
             const result = await ordersCollection.insertOne(order)
-            console.log(order);
+            
             res.json(result)
         })
 
@@ -93,14 +94,7 @@ async function run (){
             res.json(result);
         })
 
-        // app.put('/users' , async(req,res)=>{
-        //     const user = req.body;
-        //     const filter = {email: user.email};
-        //     const options = {upsert: true};
-        //     const updateDoc = {$set: user};
-        //     const result =await usersCollection.updateOne(filter, updateDoc , options);
-        //     res.json(result)
-        // })
+        
 
         app.delete('/orders/:id' , async(req , res)=>{
         const id = req.params.id;
@@ -114,12 +108,20 @@ async function run (){
     app.put('/users/admin', async(req,res)=>{
         
         const user =req.body;
-        console.log('put' , user)
+        
         const filter = {email: user.email};
         const updateDoc = {$set:  {role:'admin'}};
         const result = await usersCollection.updateOne(filter, updateDoc );
         res.json(result)
     })
+
+    app.post('/reviews/add' , async(req , res)=>{
+        const review = req.body;
+      const result = await reviewsCollection.insertOne(review);
+       res.json(result);
+       console.log(result)
+    })
+
 
     }
     finally{
